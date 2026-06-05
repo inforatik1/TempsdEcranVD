@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temps d'écran</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Temps d'écran par semaine</h1>
+    
+    <div class="controls">
+        <label for="select-semaine1">Semaine 1:</label>
+        <select id="select-semaine1">
+            <option value="" disabled selected>Choisir une vue</option>
+            <option value="moyenne">Moyenne Journalière</option>
+            <option value="samedi">Samedi</option>
+            <option value="dimanche">Dimanche</option>
+            <option value="lundi">Lundi</option>
+            <option value="mardi">Mardi</option>
+        </select>
+        
+        <button id="btn-semaine2" class="nav-btn">Semaine 2</button>
+        <button id="btn-semaine3" class="nav-btn">Semaine 3</button>
+    </div>
+
+    <svg id="svg" width="900" height="700"></svg>
+
+    <script src="main.js"></script>
+</body>
+</html>
