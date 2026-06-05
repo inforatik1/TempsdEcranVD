@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Screen Time</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+</head>
+<body>
+  <h3>Temps d'écran moyen par app (min/jour)</h3>
+  <svg id="svg" width="900" height="700"></svg>
+<div class="controls">
+    <label for="select-semaine1">Semaine 1 :</label>
+    <select id="select-semaine1">
+      <option value="" disabled selected>Choisir une vue</option>
+      <option value="moyenne">Moyenne Journalière</option>
+      <option value="samedi">Samedi</option>
+      <option value="dimanche">Dimanche</option>
+      <option value="lundi">Lundi</option>
+      <option value="mardi">Mardi</option>
+    </select>
+    <button id="btn-semaine2" class="nav-btn">Semaine 2</button>
+    <button id="btn-semaine3" class="nav-btn">Semaine 3</button>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>

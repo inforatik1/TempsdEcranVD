@@ -1,0 +1,22 @@
+body { 
+    font-family:sans-serif; 
+    margin: 20px; }
+
+svg { 
+    border: 1px solid #ccc; 
+    display: block; }
+
+text { 
+    pointer-events: none; 
+    font-size: 11px; 
+    text-anchor: middle; }
+
+.nom-app {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.valeur-app {
+  font-size: 10px;
+  fill: #666;
+}

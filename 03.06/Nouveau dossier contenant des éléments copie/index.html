@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Screen Time</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+</head>
+<body>
+  <h3>Temps d'écran moyen par app (min/jour)</h3>
+  <svg id="svg" width="700" height="500"></svg>
+  <div id="jour-buttons">
+    <button type="button" data-jour="moyenne">Moyenne</button>
+    <button type="button" data-jour="samedi">Samedi</button>
+    <button type="button" data-jour="dimanche">Dimanche</button>
+    <button type="button" data-jour="lundi">Lundi</button>
+    <button type="button" data-jour="mardi">Mardi</button>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>
