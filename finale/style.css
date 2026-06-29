@@ -1,0 +1,49 @@
+
+body {
+    font-family: Arial;
+    background: #f7f7f5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 16px 48px;
+}
+
+.description {
+    max-width: 720px;
+    text-align: center;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: rgb(142, 84, 31);
+    margin-bottom: 28px;
+}
+
+h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #533212;
+    letter-spacing: -0.5px;
+    margin-bottom: 10px;
+    text-align: center;
+
+}
+
+
+#svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border: 1px solid grey;
+    border-radius: 67px;
+   
+}
+
+#select-vue {
+    font-size: 0.88rem;
+    padding: 7px 32px 7px 10px;
+    border: 1px solid #bbb;
+    background: #fff;
+    color: #111;
+    cursor: pointer;
+    min-width: 280px;
+}

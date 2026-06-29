@@ -1,4 +1,4 @@
-//tableaux trnasformés du CSV par KIMI AI.
+//tableaux trnasformés du CSV par KIMI AI. en un format admissinle par le pack d3.
 const tab1 = [
   { Application: "Instagram", Moyenne: "196" },
   { Application: "WhatsApp", Moyenne: "31" },
@@ -62,6 +62,41 @@ const tab4 = [
 ];
 // fin
 
+const moyS1 = {}; 
+const moyS23 = {};
+
+function normNom(nom) {
+  return nom.toLowerCase().replace(/\s*\(.*?\)/g, "").trim();
+}
+
+function moyenneGlb() {
+
+  const colonnesS1 = ["Sam. 21/03", "Dim. 22/03", "Lun. 23/03", "Mar. 24/03"];
+  tab2.forEach(d => {
+    const vals = colonnesS1.map(c => parseFloat(d[c]) || 0);
+    const moy = vals.reduce((a, b) => a + b, 0) / vals.length;
+    moyS1[normNom(d.Application)] = moy;
+  });
+
+  const appsS23 = {};
+  tab3.forEach(d => {
+    const k = normNom(d.Application);
+    appsS23[k] = [parseFloat(d.Moyenne)];
+  });
+  tab4.forEach(d => {
+    const k = normNom(d.Application);
+    if (appsS23[k]) appsS23[k].push(parseFloat(d.Moyenne));
+    else appsS23[k] = [parseFloat(d.Moyenne)];
+  });
+  Object.entries(appsS23).forEach(([k, vals]) => {
+    moyS23[k] = vals.reduce((a, b) => a + b, 0) / vals.length;
+  });
+}
+moyenneGlb();
+let vueActive = "s1-moyenne";
+
+
+
 
 const width = 900;
 const height = 700;
@@ -79,6 +114,7 @@ const afficher = (donnees, colonneDonnee, diviseur = 1) => {
   const pack = d3.pack()
     .size([width - margin * 2, height - margin * 2])
     .padding(3);
+    
 
   const children = donnees
     .map(d => ({
@@ -103,7 +139,9 @@ const afficher = (donnees, colonneDonnee, diviseur = 1) => {
   node.append("circle")
     .attr("fill-opacity", 0.7)
     .attr("fill", d => color(d.data.id))
-    .attr("r", d => d.r);
+    .attr("r", d => d.r)
+    .attr("r", d => d.r)
+    .on("click", auClic);
 
 
   node.append("text")
@@ -125,34 +163,41 @@ const afficher = (donnees, colonneDonnee, diviseur = 1) => {
     .text(d => format(d.value) + " min");
 };
 
-// généré et expliqué par KIMI AI. 
+function auClic(event, d) {
+  const appKey = normNom(d.data.id);
+  const valeur = d.value;
 
-d3.select("#select-semaine1").on("change", function() {
-  const vue = this.value;
-  if (vue === "moyenne") afficher(tab1, "Moyenne", 1);
-  if (vue === "samedi") afficher(tab2, "Sam. 21/03", 1);
-  if (vue === "dimanche") afficher(tab2, "Dim. 22/03", 1);
-  if (vue === "lundi") afficher(tab2, "Lun. 23/03", 1);
-  if (vue === "mardi") afficher(tab2, "Mar. 24/03", 1);
+  const estS1 = vueActive.startsWith("s1");
+  const refMoy = estS1 ? moyS1 : moyS23;
+  const avg = refMoy[appKey];
 
-  d3.select("#btn-semaine2").classed("active", false);
-  d3.select("#btn-semaine3").classed("active", false);
+  let msg = "";
+  if (avg !== undefined) {
+    const pct = ((valeur - avg) / avg) * 100;
+    const signe = pct >= 0 ? "+" : "";
+    msg = `${d.data.id} : ${Math.round(valeur)} min\n${signe}${pct.toFixed(0)}% par rapport à la moyenne (${Math.round(avg)} min)`;
+  } else {
+    msg = `${d.data.id} : ${Math.round(valeur)} min\n(pas de données comparatives)`;
+  }
+  alert(msg);
+}  
+
+// généré et expliqué par KIMI AI. (prompt : "voici mon code JS, pourquoi l'affichage des bonnes données du tableau ne marchent pas quand je sélectionne la semaine ?")
+function changerVue(vue) {
+  vueActive = vue;
+  if (vue === "s1-moyenne")  afficher(tab1, "Moyenne",    1);
+  if (vue === "s1-samedi")   afficher(tab2, "Sam. 21/03", 1);
+  if (vue === "s1-dimanche") afficher(tab2, "Dim. 22/03", 1);
+  if (vue === "s1-lundi")    afficher(tab2, "Lun. 23/03", 1);
+  if (vue === "s1-mardi")    afficher(tab2, "Mar. 24/03", 1);
+  if (vue === "s2-total")    afficher(tab3, "Moyenne",    1);
+  if (vue === "s3-total")    afficher(tab4, "Moyenne",    1);
+}
+
+d3.select("#select-vue").on("change", function() {
+  changerVue(this.value);
 });
 
-d3.select("#btn-semaine2").on("click", function() {
-  afficher(tab3, "Moyenne", 10);
-  d3.select("#select-semaine1").node().value = "";
-  d3.select(this).classed("active", true);
-  d3.select("#btn-semaine3").classed("active", false);
-});
+changerVue("s1-moyenne");
 
-d3.select("#btn-semaine3").on("click", function() {
-  afficher(tab4, "Moyenne", 10);
-  d3.select("#select-semaine1").node().value = "";
-  d3.select(this).classed("active", true);
-  d3.select("#btn-semaine2").classed("active", false);
-});
-
-
-afficher(tab1, "Moyenne", 1);
 //fin
