@@ -47,3 +47,35 @@ h1 {
     cursor: pointer;
     min-width: 280px;
 }
+
+
+
+.barre {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 0.8rem;
+}
+
+.remplissage {
+    background: #c8844a;
+    height: 16px;
+    border-radius: 3px;
+}
+
+.barretxt {
+    width: 90px;
+    text-align: right;
+    color: #555;
+}
+
+.barrevaleur {
+    color: #333;
+}
+
+.popup {
+    color: #555;
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+}

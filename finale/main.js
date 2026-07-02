@@ -62,8 +62,6 @@ const tab4 = [
 ];
 // fin
 
-const moyS1 = {}; 
-const moyS23 = {};
 
 function normNom(nom) {
   return nom.toLowerCase().replace(/\s*\(.*?\)/g, "").trim();
@@ -74,8 +72,7 @@ function moyenneGlb() {
   const colonnesS1 = ["Sam. 21/03", "Dim. 22/03", "Lun. 23/03", "Mar. 24/03"];
   tab2.forEach(d => {
     const vals = colonnesS1.map(c => parseFloat(d[c]) || 0);
-    const moy = vals.reduce((a, b) => a + b, 0) / vals.length;
-    moyS1[normNom(d.Application)] = moy;
+
   });
 
   const appsS23 = {};
@@ -88,9 +85,7 @@ function moyenneGlb() {
     if (appsS23[k]) appsS23[k].push(parseFloat(d.Moyenne));
     else appsS23[k] = [parseFloat(d.Moyenne)];
   });
-  Object.entries(appsS23).forEach(([k, vals]) => {
-    moyS23[k] = vals.reduce((a, b) => a + b, 0) / vals.length;
-  });
+ 
 }
 moyenneGlb();
 let vueActive = "s1-moyenne";
@@ -165,23 +160,54 @@ const afficher = (donnees, colonneDonnee, diviseur = 1) => {
 
 function auClic(event, d) {
   const appKey = normNom(d.data.id);
-  const valeur = d.value;
 
-  const estS1 = vueActive.startsWith("s1");
-  const refMoy = estS1 ? moyS1 : moyS23;
-  const avg = refMoy[appKey];
+  const trouver = (tab, col) => {
+    const ligne = tab.find(r => normNom(r.Application) === appKey);
+    return ligne ? parseFloat(ligne[col]) || 0 : null;
+  };
 
-  let msg = "";
-  if (avg !== undefined) {
-    const pct = ((valeur - avg) / avg) * 100;
-    const signe = pct >= 0 ? "+" : "";
-    msg = `${d.data.id} : ${Math.round(valeur)} min\n${signe}${pct.toFixed(0)}% par rapport à la moyenne (${Math.round(avg)} min)`;
-  } else {
-    msg = `${d.data.id} : ${Math.round(valeur)} min\n(pas de données comparatives)`;
-  }
-  alert(msg);
-}  
+  const barres = [
+    { label: "S1 moyenne", val: trouver(tab1, "Moyenne") },
+    { label: "Samedi 21",  val: trouver(tab2, "Sam. 21/03") },
+    { label: "Dimanche 22",val: trouver(tab2, "Dim. 22/03") },
+    { label: "Lundi 23",   val: trouver(tab2, "Lun. 23/03") },
+    { label: "Mardi 24",   val: trouver(tab2, "Mar. 24/03") },
+    { label: "Semaine 2",  val: trouver(tab3, "Moyenne") },
+    { label: "Semaine 3",  val: trouver(tab4, "Moyenne") },
+  ].filter(b => b.val !== null);
 
+  const max = Math.max(...barres.map(b => b.val));
+
+const html = barres.map(b => `
+  <div class="barre">
+    <span class="barretxt">${b.label}</span>
+    <div class="remplissage"
+         style="width:${Math.round((b.val / max) * 200)}px;">
+    </div>
+    <span class="barrevaleur">${b.val} min</span>
+  </div>
+`).join("");
+
+const moyenne = barres.reduce((a, b) => a + b.val, 0) / barres.length;
+const valActuelle = d.value;
+const pct = ((valActuelle - moyenne) / moyenne) * 100;
+const signe = pct >= 0 ? "+" : "";
+
+const sousTitre = `
+<p class="popup">
+  Vue actuelle :
+  <strong>${Math.round(valActuelle)} min</strong>
+  <strong>${signe}${pct.toFixed(0)}%</strong>
+  par rapport à la moyenne (${Math.round(moyenne)} min)
+</p>`;
+
+Swal.fire({
+  title: d.data.id,
+  html: sousTitre + html,
+  confirmButtonText: "Fermer",
+  confirmButtonColor: "#533212",
+});
+}
 // généré et expliqué par KIMI AI. (prompt : "voici mon code JS, pourquoi l'affichage des bonnes données du tableau ne marchent pas quand je sélectionne la semaine ?")
 function changerVue(vue) {
   vueActive = vue;
